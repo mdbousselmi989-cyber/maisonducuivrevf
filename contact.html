@@ -14,7 +14,7 @@
   <div class="container header-inner">
     <a href="index.html" class="brand">
       <span class="brand-mark">MC</span>
-      <span class="brand-text"><strong>Maison du Cuivre</strong><span>Artisanat tunisien</span></span>
+      <span class="brand-text"><strong data-field="site.name">Maison du Cuivre</strong><span data-field="site.tagline">Artisanat tunisien</span></span>
     </a>
     <button class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false"><span></span></button>
     <nav class="main-nav">
@@ -29,11 +29,11 @@
   </div>
 </header>
 
-<section class="page-hero hammered">
+<section class="page-hero hammered" data-bg="covers.contact">
   <div class="container">
     <div class="breadcrumb"><a href="index.html">Accueil</a> / Contact</div>
-    <h1>Contactez-nous</h1>
-    <p>Une question, un projet sur mesure ou simplement envie de nous rendre visite ? Nous serions ravis de vous répondre.</p>
+    <h1 data-field="contact.heroTitle">Contactez-nous</h1>
+    <p data-field="contact.heroText">Une question, un projet sur mesure ou simplement envie de nous rendre visite ? Nous serions ravis de vous répondre.</p>
   </div>
 </section>
 
@@ -81,7 +81,7 @@
             </span>
             <div>
               <h3>Adresse</h3>
-              <p>Rue de Gammarth, Gammarth, Tunisie</p>
+              <p data-field="site.address">Rue de Gammarth, Gammarth, Tunisie</p>
             </div>
           </div>
           <div class="info-item">
@@ -90,7 +90,7 @@
             </span>
             <div>
               <h3>Téléphone</h3>
-              <p><a href="tel:+216XXXXXXXX">+216 XX XXX XXX</a></p>
+              <p><a data-href="site.phone" data-href-prefix="tel:" href="tel:+216XXXXXXXX"><span data-field="site.phone">+216 XX XXX XXX</span></a></p>
             </div>
           </div>
           <div class="info-item">
@@ -99,7 +99,7 @@
             </span>
             <div>
               <h3>E-mail</h3>
-              <p><a href="mailto:contact@maisonducuivre.tn">contact@maisonducuivre.tn</a></p>
+              <p><a data-href="site.email" data-href-prefix="mailto:" href="mailto:contact@maisonducuivre.tn"><span data-field="site.email">contact@maisonducuivre.tn</span></a></p>
             </div>
           </div>
           <div class="info-item">
@@ -108,7 +108,7 @@
             </span>
             <div>
               <h3>Facebook</h3>
-              <p><a href="https://www.facebook.com/profile.php?id=61577043486522" target="_blank" rel="noopener">Maison du Cuivre sur Facebook</a></p>
+              <p><a data-href="site.facebook" href="https://www.facebook.com/profile.php?id=61577043486522" target="_blank" rel="noopener">Maison du Cuivre sur Facebook</a></p>
             </div>
           </div>
           <div class="info-item">
@@ -117,7 +117,7 @@
             </span>
             <div>
               <h3>Horaires</h3>
-              <p>Lun – Sam : 9h00 – 18h00<br>Dimanche : fermé</p>
+              <p><span data-field="site.hoursWeek">Lun – Sam : 9h00 – 18h00</span><br><span data-field="site.hoursWeekend">Dimanche : fermé</span></p>
             </div>
           </div>
         </div>
@@ -131,17 +131,18 @@
   <div class="container">
     <div class="section-head reveal">
       <span class="eyebrow">Localisation</span>
-      <h2>Notre atelier — Rue de Gammarth</h2>
-      <p>Venez découvrir nos créations directement à l'atelier, situé Rue de Gammarth, Tunisie.</p>
+      <h2 data-field="contact.mapTitle">Notre atelier — Rue de Gammarth</h2>
+      <p data-field="contact.mapText">Venez découvrir nos créations directement à l'atelier, situé Rue de Gammarth, Tunisie.</p>
     </div>
     <div class="map-wrap reveal">
       <iframe
+        id="map-iframe"
         title="Localisation Maison du Cuivre - Rue de Gammarth"
         src="https://www.openstreetmap.org/export/embed.html?bbox=10.2790%2C36.9010%2C10.2990%2C36.9210&layer=mapnik&marker=36.9110%2C10.2890"
         loading="lazy">
       </iframe>
     </div>
-    <p class="reveal reviews-note">Emplacement approximatif sur la carte — précisez l'adresse exacte de l'atelier dans README.md / auprès du webmaster si besoin d'un point plus précis.</p>
+    <p class="reveal reviews-note" data-field="contact.mapNote">Emplacement approximatif sur la carte — précisez l'adresse exacte de l'atelier dans l'admin si besoin d'un point plus précis.</p>
   </div>
 </section>
 
@@ -151,11 +152,11 @@
       <div>
         <div class="footer-brand">
           <span class="brand-mark">MC</span>
-          <strong>Maison du Cuivre</strong>
+          <strong data-field="site.name">Maison du Cuivre</strong>
         </div>
-        <p>Atelier artisanal tunisien spécialisé dans la fabrication d'objets en cuivre faits main : décoration, art de la table et pièces sur mesure.</p>
+        <p data-field="site.footerAbout">Atelier artisanal tunisien spécialisé dans la fabrication d'objets en cuivre faits main : décoration, art de la table et pièces sur mesure.</p>
         <div class="social-row">
-          <a href="https://www.facebook.com/profile.php?id=61577043486522" target="_blank" rel="noopener" aria-label="Facebook">
+          <a data-href="site.facebook" href="https://www.facebook.com/profile.php?id=61577043486522" target="_blank" rel="noopener" aria-label="Facebook">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>
           </a>
         </div>
@@ -173,18 +174,20 @@
       <div>
         <h4>Contact</h4>
         <ul>
-          <li>Rue de Gammarth, Gammarth, Tunisie</li>
-          <li><a href="tel:+216XXXXXXXX">+216 XX XXX XXX</a></li>
-          <li><a href="mailto:contact@maisonducuivre.tn">contact@maisonducuivre.tn</a></li>
+          <li data-field="site.address">Rue de Gammarth, Gammarth, Tunisie</li>
+          <li><a data-href="site.phone" data-href-prefix="tel:" href="tel:+216XXXXXXXX"><span data-field="site.phone">+216 XX XXX XXX</span></a></li>
+          <li><a data-href="site.email" data-href-prefix="mailto:" href="mailto:contact@maisonducuivre.tn"><span data-field="site.email">contact@maisonducuivre.tn</span></a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      © <span id="year"></span> Maison du Cuivre — Tous droits réservés.
+      © <span id="year"></span> <span data-field="site.name">Maison du Cuivre</span> — Tous droits réservés. · <a href="admin.html" style="color:inherit;text-decoration:underline;opacity:.7;">Administration</a>
     </div>
   </div>
 </footer>
 
+<script src="js/site-data.js"></script>
+<script src="js/render.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@
   <div class="container header-inner">
     <a href="index.html" class="brand">
       <span class="brand-mark">MC</span>
-      <span class="brand-text"><strong>Maison du Cuivre</strong><span>Artisanat tunisien</span></span>
+      <span class="brand-text"><strong data-field="site.name">Maison du Cuivre</strong><span data-field="site.tagline">Artisanat tunisien</span></span>
     </a>
     <button class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false"><span></span></button>
     <nav class="main-nav">
@@ -29,12 +29,12 @@
   </div>
 </header>
 
-<section class="hero hammered">
+<section class="hero hammered" data-bg="covers.home">
   <div class="container">
     <div class="hero-inner">
-      <span class="eyebrow">Atelier artisanal · Gammarth, Tunisie</span>
-      <h1>L'art du cuivre, façonné à la main</h1>
-      <p class="lead">Maison du Cuivre perpétue un savoir-faire artisanal tunisien : plateaux ciselés, théières, lanternes et pièces de décoration, façonnés une à une dans notre atelier.</p>
+      <span class="eyebrow" data-field="home.heroEyebrow">Atelier artisanal · Gammarth, Tunisie</span>
+      <h1 data-field="home.heroTitle">L'art du cuivre, façonné à la main</h1>
+      <p class="lead" data-field="home.heroLead">Maison du Cuivre perpétue un savoir-faire artisanal tunisien : plateaux ciselés, théières, lanternes et pièces de décoration, façonnés une à une dans notre atelier.</p>
       <div class="hero-actions">
         <a href="galerie.html" class="btn btn-primary">Découvrir nos produits</a>
         <a href="sur-mesure.html" class="btn btn-outline">Une pièce sur mesure</a>
@@ -47,13 +47,13 @@
   <div class="container">
     <div class="about-grid reveal">
       <div class="about-visual">
-        <img src="images/products/plateau.svg" alt="Plateau en cuivre artisanal">
+        <img data-image="home.introImage" src="images/products/plateau.svg" alt="Plateau en cuivre artisanal">
       </div>
       <div>
-        <span class="eyebrow">Notre maison</span>
-        <h2>Un savoir-faire transmis, une passion pour le cuivre</h2>
-        <p>Depuis notre atelier de Gammarth, nous façonnons le cuivre selon des techniques artisanales ancestrales : martelage, ciselure et gravure à la main. Chaque pièce raconte une histoire et porte la signature unique de son artisan.</p>
-        <p>Notre mission : faire vivre un artisanat tunisien authentique, tout en l'adaptant aux intérieurs et aux envies d'aujourd'hui.</p>
+        <span class="eyebrow" data-field="home.introEyebrow">Notre maison</span>
+        <h2 data-field="home.introTitle">Un savoir-faire transmis, une passion pour le cuivre</h2>
+        <p data-field="home.introText1">Depuis notre atelier de Gammarth, nous façonnons le cuivre selon des techniques artisanales ancestrales : martelage, ciselure et gravure à la main. Chaque pièce raconte une histoire et porte la signature unique de son artisan.</p>
+        <p data-field="home.introText2">Notre mission : faire vivre un artisanat tunisien authentique, tout en l'adaptant aux intérieurs et aux envies d'aujourd'hui.</p>
         <a href="apropos.html" class="btn btn-outline dark">En savoir plus sur notre histoire</a>
       </div>
     </div>
@@ -63,44 +63,11 @@
 <section class="section bg-cream-dark">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Nos créations</span>
-      <h2>Produits phares</h2>
-      <p>Un aperçu de nos pièces les plus appréciées, entièrement travaillées à la main dans notre atelier.</p>
+      <span class="eyebrow" data-field="home.productsEyebrow">Nos créations</span>
+      <h2 data-field="home.productsTitle">Produits phares</h2>
+      <p data-field="home.productsText">Un aperçu de nos pièces les plus appréciées, entièrement travaillées à la main dans notre atelier.</p>
     </div>
-    <div class="grid grid-4 reveal">
-      <div class="card">
-        <div class="card-media"><span class="tag">Best-seller</span><img src="images/products/plateau.svg" alt="Plateau en cuivre ciselé"></div>
-        <div class="card-body">
-          <h3>Plateau ciselé</h3>
-          <p>Plateau rond en cuivre martelé, motifs gravés à la main.</p>
-          <div class="card-foot"><span class="price-tag">Sur devis</span><a href="galerie.html">Voir&nbsp;→</a></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-media"><img src="images/products/theiere.svg" alt="Théière traditionnelle en cuivre"></div>
-        <div class="card-body">
-          <h3>Théière traditionnelle</h3>
-          <p>Théière artisanale au style oriental, idéale pour le thé à la menthe.</p>
-          <div class="card-foot"><span class="price-tag">Sur devis</span><a href="galerie.html">Voir&nbsp;→</a></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-media"><img src="images/products/lanterne.svg" alt="Lanterne en cuivre"></div>
-        <div class="card-body">
-          <h3>Lanterne artisanale</h3>
-          <p>Lanterne ajourée qui diffuse une lumière chaude et feutrée.</p>
-          <div class="card-foot"><span class="price-tag">Sur devis</span><a href="galerie.html">Voir&nbsp;→</a></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-media"><img src="images/products/vase.svg" alt="Vase décoratif en cuivre"></div>
-        <div class="card-body">
-          <h3>Vase décoratif</h3>
-          <p>Vase élégant au galbe travaillé à la main, pièce de caractère.</p>
-          <div class="card-foot"><span class="price-tag">Sur devis</span><a href="galerie.html">Voir&nbsp;→</a></div>
-        </div>
-      </div>
-    </div>
+    <div id="home-products-grid" class="grid grid-4 reveal"></div>
     <div style="text-align:center; margin-top:40px;">
       <a href="galerie.html" class="btn btn-primary">Voir toute la galerie</a>
     </div>
@@ -110,9 +77,9 @@
 <section class="section">
   <div class="container">
     <div class="cta-band hammered reveal">
-      <span class="eyebrow" style="color:#fff;">Sur mesure</span>
-      <h2>Une pièce unique, à votre image</h2>
-      <p>Gravure personnalisée, dimensions adaptées, finitions choisies : confiez-nous votre projet et nos artisans lui donneront vie.</p>
+      <span class="eyebrow" style="color:#fff;" data-field="home.customEyebrow">Sur mesure</span>
+      <h2 data-field="home.customTitle">Une pièce unique, à votre image</h2>
+      <p data-field="home.customText">Gravure personnalisée, dimensions adaptées, finitions choisies : confiez-nous votre projet et nos artisans lui donneront vie.</p>
       <div class="cta-actions">
         <a href="sur-mesure.html" class="btn btn-outline">Demander un devis sur mesure</a>
       </div>
@@ -123,48 +90,23 @@
 <section class="section bg-cream-dark">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Avis clients</span>
-      <h2>Ce que nos clients disent de nous</h2>
-      <p>Quelques retours de clients ayant fait confiance à Maison du Cuivre.</p>
+      <span class="eyebrow" data-field="home.reviewsEyebrow">Avis clients</span>
+      <h2 data-field="home.reviewsTitle">Ce que nos clients disent de nous</h2>
+      <p data-field="home.reviewsText">Quelques retours de clients ayant fait confiance à Maison du Cuivre.</p>
     </div>
-    <div class="grid grid-3 reveal">
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">« Un plateau magnifique, le travail de gravure est d'une finesse incroyable. Livraison rapide et service très arrangeant. »</p>
-        <div class="testimonial-author">
-          <span class="avatar">S</span>
-          <div><strong>Sonia B.</strong><span>Cliente à Tunis</span></div>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">« Nous avons commandé une théière personnalisée pour un cadeau de mariage, le résultat a dépassé nos attentes. »</p>
-        <div class="testimonial-author">
-          <span class="avatar">K</span>
-          <div><strong>Karim T.</strong><span>Client à La Marsa</span></div>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">« Un vrai savoir-faire artisanal. On sent la passion dans chaque pièce. Je recommande vivement Maison du Cuivre. »</p>
-        <div class="testimonial-author">
-          <span class="avatar">L</span>
-          <div><strong>Leïla M.</strong><span>Cliente à Gammarth</span></div>
-        </div>
-      </div>
-    </div>
-    <p class="reveal reviews-note">Avis d'exemple à remplacer par vos véritables avis clients Facebook — voir le fichier README.md.</p>
+    <div id="home-testimonials-grid" class="grid grid-3 reveal"></div>
+    <p class="reveal reviews-note">Avis d'exemple à remplacer par vos véritables avis clients Facebook — modifiables depuis l'administration.</p>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
     <div class="cta-band bg-ink reveal">
-      <h2>Venez découvrir l'atelier</h2>
-      <p>Rue de Gammarth, Tunisie — suivez-nous aussi sur Facebook pour découvrir nos dernières créations.</p>
+      <h2 data-field="home.visitTitle">Venez découvrir l'atelier</h2>
+      <p data-field="home.visitText">Rue de Gammarth, Tunisie — suivez-nous aussi sur Facebook pour découvrir nos dernières créations.</p>
       <div class="cta-actions">
         <a href="contact.html" class="btn btn-primary">Nous contacter</a>
-        <a href="https://www.facebook.com/profile.php?id=61577043486522" target="_blank" rel="noopener" class="btn btn-outline">Voir notre page Facebook</a>
+        <a data-href="site.facebook" href="https://www.facebook.com/profile.php?id=61577043486522" target="_blank" rel="noopener" class="btn btn-outline">Voir notre page Facebook</a>
       </div>
     </div>
   </div>
@@ -176,11 +118,11 @@
       <div>
         <div class="footer-brand">
           <span class="brand-mark">MC</span>
-          <strong>Maison du Cuivre</strong>
+          <strong data-field="site.name">Maison du Cuivre</strong>
         </div>
-        <p>Atelier artisanal tunisien spécialisé dans la fabrication d'objets en cuivre faits main : décoration, art de la table et pièces sur mesure.</p>
+        <p data-field="site.footerAbout">Atelier artisanal tunisien spécialisé dans la fabrication d'objets en cuivre faits main : décoration, art de la table et pièces sur mesure.</p>
         <div class="social-row">
-          <a href="https://www.facebook.com/profile.php?id=61577043486522" target="_blank" rel="noopener" aria-label="Facebook">
+          <a data-href="site.facebook" href="https://www.facebook.com/profile.php?id=61577043486522" target="_blank" rel="noopener" aria-label="Facebook">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>
           </a>
         </div>
@@ -198,18 +140,20 @@
       <div>
         <h4>Contact</h4>
         <ul>
-          <li>Rue de Gammarth, Gammarth, Tunisie</li>
-          <li><a href="tel:+216XXXXXXXX">+216 XX XXX XXX</a></li>
-          <li><a href="mailto:contact@maisonducuivre.tn">contact@maisonducuivre.tn</a></li>
+          <li data-field="site.address">Rue de Gammarth, Gammarth, Tunisie</li>
+          <li><a data-href="site.phone" data-href-prefix="tel:" href="tel:+216XXXXXXXX"><span data-field="site.phone">+216 XX XXX XXX</span></a></li>
+          <li><a data-href="site.email" data-href-prefix="mailto:" href="mailto:contact@maisonducuivre.tn"><span data-field="site.email">contact@maisonducuivre.tn</span></a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      © <span id="year"></span> Maison du Cuivre — Tous droits réservés.
+      © <span id="year"></span> <span data-field="site.name">Maison du Cuivre</span> — Tous droits réservés. · <a href="admin.html" style="color:inherit;text-decoration:underline;opacity:.7;">Administration</a>
     </div>
   </div>
 </footer>
 
+<script src="js/site-data.js"></script>
+<script src="js/render.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
