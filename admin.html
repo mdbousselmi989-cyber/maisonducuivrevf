@@ -7,36 +7,21 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23fffdf9' stroke='%23b3894f' stroke-width='3'/%3E%3Ctext x='50' y='63' font-size='38' text-anchor='middle' fill='%237a4a24' font-family='Georgia,serif'%3EMC%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/style.css">
-<!-- EmailJS : permet d'envoyer un e-mail de récupération sans serveur -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
-<!-- Écran de verrouillage local (protection légère, non sécurisée — voir README.md) -->
+<!-- Écran de verrouillage local (mot de passe fixe, protection légère — voir README.md) -->
 <div id="admin-gate" class="admin-gate">
   <div class="form-card">
     <h2 style="margin-bottom:6px;">Administration</h2>
     <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:24px;">Maison du Cuivre — accès réservé</p>
-
-    <!-- Écran de connexion / création du mot de passe -->
-    <div id="gate-login">
-      <div class="field">
-        <label for="gate-password">Mot de passe</label>
-        <input type="password" id="gate-password" placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <button id="gate-submit" class="btn btn-primary btn-block">Entrer</button>
-      <p id="gate-message" class="form-note"></p>
-      <p class="form-note" id="gate-forgot-wrap"><a href="#" id="gate-forgot-link" style="text-decoration:underline;">Mot de passe oublié ?</a></p>
-      <p class="form-note"><a href="index.html" style="text-decoration:underline;">← Retour au site</a></p>
+    <div class="field">
+      <label for="gate-password">Mot de passe</label>
+      <input type="password" id="gate-password" placeholder="••••••••" autocomplete="current-password">
     </div>
-
-    <!-- Écran de récupération : envoi automatique à l'e-mail configuré -->
-    <div id="gate-forgot" style="display:none;">
-      <p style="color:var(--ink-soft);font-size:.85rem;margin-bottom:20px;">Le mot de passe actuel va être envoyé à l'adresse e-mail enregistrée pour l'administration de ce site.</p>
-      <button id="gate-forgot-submit" class="btn btn-primary btn-block">Recevoir mon mot de passe par e-mail</button>
-      <p id="gate-forgot-message" class="form-note"></p>
-      <p class="form-note"><a href="#" id="gate-back-link" style="text-decoration:underline;">← Retour à la connexion</a></p>
-    </div>
+    <button id="gate-submit" class="btn btn-primary btn-block">Entrer</button>
+    <p id="gate-message" class="form-note"></p>
+    <p class="form-note"><a href="index.html" style="text-decoration:underline;">← Retour au site</a></p>
   </div>
 </div>
 
@@ -48,7 +33,6 @@
       <div><strong>Administration</strong><span>Maison du Cuivre</span></div>
     </div>
     <a class="admin-nav-link" href="#sec-identite">Identité &amp; logo</a>
-    <a class="admin-nav-link" href="#sec-securite">Sécurité</a>
     <a class="admin-nav-link" href="#sec-coordonnees">Coordonnées &amp; carte</a>
     <a class="admin-nav-link" href="#sec-couvertures">Images de couverture</a>
     <a class="admin-nav-link" href="#sec-accueil">Page Accueil</a>
@@ -80,29 +64,6 @@
         <strong>tous vos visiteurs</strong>, cliquez sur « Enregistrer » puis « Télécharger site-data.js » et
         remplacez le fichier <code>js/site-data.js</code> du site avant de le redéployer — voir README.md.
       </p>
-
-      <!-- Sécurité -->
-      <section id="sec-securite" class="admin-section">
-        <h2>Sécurité</h2>
-        <p class="admin-section-desc">Changez le mot de passe d'accès à cette page. Une confirmation sera envoyée à mdbousselmi989@gmail.com.</p>
-
-        <div class="field">
-          <label for="pwd-current">Mot de passe actuel</label>
-          <input type="password" id="pwd-current" autocomplete="current-password">
-        </div>
-        <div class="admin-grid-2">
-          <div class="field">
-            <label for="pwd-new">Nouveau mot de passe</label>
-            <input type="password" id="pwd-new" autocomplete="new-password">
-          </div>
-          <div class="field">
-            <label for="pwd-confirm">Confirmer le nouveau mot de passe</label>
-            <input type="password" id="pwd-confirm" autocomplete="new-password">
-          </div>
-        </div>
-        <button type="button" id="btn-change-password" class="btn btn-primary">Changer le mot de passe</button>
-        <p id="pwd-message" class="form-note"></p>
-      </section>
 
       <!-- Identité -->
       <section id="sec-identite" class="admin-section">
