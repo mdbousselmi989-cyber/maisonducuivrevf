@@ -98,9 +98,84 @@
     var val = getPath(data, path);
     if (val) {
       box.innerHTML = '<img src="' + val + '" alt="">';
+      applyFrameToEl(box.querySelector("img"), getFrame(path));
     } else {
       box.textContent = "Aucune";
     }
+  }
+
+  // ------------------------------------------------------------------
+  // Cadrage / zoom d'image (position + échelle), stocké dans <path>Frame
+  // ------------------------------------------------------------------
+  function getFrame(path) {
+    var f = getPath(data, path + "Frame");
+    return f && typeof f === "object" ? f : { x: 50, y: 50, zoom: 100 };
+  }
+
+  function setFrame(path, frame) {
+    setPath(data, path + "Frame", frame);
+  }
+
+  function applyFrameToEl(imgEl, frame) {
+    if (!imgEl) return;
+    imgEl.style.setProperty("--pos-x", frame.x + "%");
+    imgEl.style.setProperty("--pos-y", frame.y + "%");
+    imgEl.style.setProperty("--img-zoom", (frame.zoom / 100));
+  }
+
+  // Construit le bloc de contrôle (zoom + position) et le branche à un getter/setter.
+  // previewImgGetter : fonction qui retourne l'élément <img> à mettre à jour en direct.
+  function buildFrameControl(container, path, previewImgGetter) {
+    if (!container) return;
+    container.innerHTML = "";
+    var frame = getFrame(path);
+
+    var wrap = document.createElement("div");
+    wrap.className = "frame-control";
+
+    function row(labelText, min, max, value, unit, onChange) {
+      var r = document.createElement("div");
+      r.className = "frame-control-row";
+      var label = document.createElement("label");
+      label.textContent = labelText;
+      var input = document.createElement("input");
+      input.type = "range";
+      input.min = min; input.max = max; input.value = value;
+      var out = document.createElement("span");
+      out.className = "frame-value";
+      out.textContent = value + unit;
+      input.addEventListener("input", function () {
+        out.textContent = input.value + unit;
+        onChange(Number(input.value));
+      });
+      r.appendChild(label); r.appendChild(input); r.appendChild(out);
+      return r;
+    }
+
+    function update() {
+      setFrame(path, frame);
+      var img = previewImgGetter();
+      applyFrameToEl(img, frame);
+    }
+
+    wrap.appendChild(row("Zoom", 100, 250, frame.zoom, "%", function (v) { frame.zoom = v; update(); }));
+    wrap.appendChild(row("Horizontal", 0, 100, frame.x, "%", function (v) { frame.x = v; update(); }));
+    wrap.appendChild(row("Vertical", 0, 100, frame.y, "%", function (v) { frame.y = v; update(); }));
+
+    var reset = document.createElement("button");
+    reset.type = "button";
+    reset.className = "frame-control-reset";
+    reset.textContent = "Réinitialiser le cadrage";
+    reset.addEventListener("click", function () {
+      frame = { x: 50, y: 50, zoom: 100 };
+      buildFrameControl(container, path, previewImgGetter);
+      setFrame(path, frame);
+      applyFrameToEl(previewImgGetter(), frame);
+    });
+    wrap.appendChild(reset);
+
+    container.appendChild(wrap);
+    applyFrameToEl(previewImgGetter(), frame);
   }
 
   function readImageCompressed(file, maxDim, format, cb) {
@@ -146,6 +221,19 @@
         var path = btn.getAttribute("data-clear-image");
         setPath(data, path, "");
         refreshImagePreview(path);
+      });
+    });
+
+    // Contrôles de cadrage / zoom pour les deux images statiques du site
+    [
+      { path: "home.introImage", frameBox: "frame-home.introImage" },
+      { path: "about.introImage", frameBox: "frame-about.introImage" }
+    ].forEach(function (cfg) {
+      var container = document.getElementById(cfg.frameBox);
+      if (!container) return;
+      buildFrameControl(container, cfg.path, function () {
+        var box = document.getElementById("preview-" + cfg.path);
+        return box ? box.querySelector("img") : null;
       });
     });
   }
@@ -349,6 +437,13 @@
       actions.appendChild(clearBtn);
       upload.appendChild(actions);
       imgField.appendChild(upload);
+
+      var frameBox = document.createElement("div");
+      imgField.appendChild(frameBox);
+      buildFrameControl(frameBox, imgPath, function () {
+        return preview.querySelector("img");
+      });
+
       row.appendChild(imgField);
     }, "Aucun produit — ajoutez-en un.");
   }
