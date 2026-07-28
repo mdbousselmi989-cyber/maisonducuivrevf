@@ -158,7 +158,7 @@
       applyFrameToEl(img, frame);
     }
 
-    wrap.appendChild(row("Zoom", 100, 250, frame.zoom, "%", function (v) { frame.zoom = v; update(); }));
+    wrap.appendChild(row("Zoom", 0, 250, frame.zoom, "%", function (v) { frame.zoom = v; update(); }));
     wrap.appendChild(row("Horizontal", 0, 100, frame.x, "%", function (v) { frame.x = v; update(); }));
     wrap.appendChild(row("Vertical", 0, 100, frame.y, "%", function (v) { frame.y = v; update(); }));
 
@@ -567,6 +567,10 @@
         l.classList.toggle("active", l.getAttribute("href") === "#" + current);
       });
     });
+  }
+
+  document.addEventListener("DOMContentLoaded", gate);
+})();
   }
 
   document.addEventListener("DOMContentLoaded", gate);
