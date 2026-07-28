@@ -171,7 +171,9 @@ p { margin: 0 0 1em; }
   letter-spacing: .02em;
   flex-shrink: 0;
   transition: transform .4s var(--ease);
+  overflow: hidden;
 }
+.brand-mark img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
 .brand:hover .brand-mark { transform: rotate(8deg) scale(1.05); }
 .brand-text { line-height: 1.15; }
 .brand-text strong {
@@ -226,6 +228,9 @@ p { margin: 0 0 1em; }
   color: #fff;
   padding: 148px 0 128px;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .hero::after {
   content: "";
@@ -257,6 +262,9 @@ p { margin: 0 0 1em; }
   position: relative;
   color: #fff;
   padding: 100px 0 84px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .page-hero::after {
   content: "";
