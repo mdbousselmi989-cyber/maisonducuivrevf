@@ -123,9 +123,11 @@
       }).then(function () {
         forgotMsg.textContent = "E-mail envoyé à " + ADMIN_RECOVERY_EMAIL + " ! Vérifiez votre boîte de réception (et les spams).";
         forgotSubmit.disabled = false;
-      }, function () {
-        forgotMsg.textContent = "Échec de l'envoi. Réessayez plus tard.";
+      }, function (err) {
+        var detail = (err && (err.text || err.message)) ? (err.text || err.message) : JSON.stringify(err);
+        forgotMsg.textContent = "Échec de l'envoi : " + detail;
         forgotSubmit.disabled = false;
+        console.error("EmailJS error:", err);
       });
     });
   }
@@ -586,8 +588,10 @@
           password: newVal
         }).then(function () {
           pwdMsg.textContent = "Mot de passe changé ✓ Confirmation envoyée à " + ADMIN_RECOVERY_EMAIL + ".";
-        }, function () {
-          pwdMsg.textContent = "Mot de passe changé ✓ (l'envoi de la confirmation par e-mail a échoué).";
+        }, function (err) {
+          var detail = (err && (err.text || err.message)) ? (err.text || err.message) : JSON.stringify(err);
+          pwdMsg.textContent = "Mot de passe changé ✓ (échec de l'envoi de confirmation : " + detail + ")";
+          console.error("EmailJS error:", err);
         });
       } else {
         pwdMsg.textContent = "Mot de passe changé ✓ (envoi d'e-mail non configuré — voir README.md).";
