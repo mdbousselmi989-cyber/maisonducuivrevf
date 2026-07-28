@@ -85,6 +85,8 @@
         setPath(data, path, v);
         if (path === "site.lat" || path === "site.lng") updateMapPreview();
         if (path === "site.logoText") refreshImagePreview("site.logoImage");
+        if (path === "site.productFrameRatio") document.documentElement.style.setProperty("--product-frame-ratio", v);
+        if (path === "site.aboutFrameRatio") document.documentElement.style.setProperty("--about-frame-ratio", v);
       });
     });
   }
@@ -300,6 +302,36 @@
     });
   }
 
+  function slugify(str) {
+    return String(str || "")
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "categorie";
+  }
+
+  function ensureCategories() {
+    if (!Array.isArray(data.categories) || !data.categories.length) {
+      data.categories = [
+        { value: "plateaux", label: "Plateaux" },
+        { value: "table", label: "Art de la table" },
+        { value: "luminaires", label: "Luminaires" },
+        { value: "decoration", label: "Décoration" }
+      ];
+    }
+  }
+
+  function renderCategories() {
+    ensureCategories();
+    repeaterShell("rep-categories", data.categories, function (row, item) {
+      row.appendChild(makeField("Nom affiché", item.label, function (v) {
+        item.label = v;
+        if (!item._manualValue) item.value = slugify(v);
+        renderProducts();
+      }));
+    }, "Aucune catégorie — ajoutez-en une.");
+  }
+
   function renderValues() {
     repeaterShell("rep-values", data.about.values, function (row, item) {
       row.appendChild(makeField("Titre", item.title, function (v) { item.title = v; }));
@@ -349,12 +381,7 @@
   }
 
   function renderProducts() {
-    var categories = [
-      { value: "plateaux", label: "Plateaux" },
-      { value: "table", label: "Art de la table" },
-      { value: "luminaires", label: "Luminaires" },
-      { value: "decoration", label: "Décoration" }
-    ];
+    var categories = data.categories && data.categories.length ? data.categories : [{ value: "decoration", label: "Décoration" }];
     repeaterShell("rep-products", data.products, function (row, item, i) {
       var grid = document.createElement("div");
       grid.className = "admin-grid-2";
@@ -449,6 +476,7 @@
   }
 
   function renderAllRepeaters() {
+    renderCategories();
     renderValues();
     renderTimeline();
     renderSteps();
@@ -535,6 +563,11 @@
     renderAllRepeaters();
     bindToolbar();
 
+    document.getElementById("add-category").addEventListener("click", function () {
+      ensureCategories();
+      data.categories.push({ value: "nouvelle-categorie-" + Date.now(), label: "Nouvelle catégorie" });
+      renderCategories();
+    });
     document.getElementById("add-value").addEventListener("click", function () {
       data.about.values.push({ title: "Nouvelle valeur", text: "" });
       renderValues();
@@ -567,10 +600,6 @@
         l.classList.toggle("active", l.getAttribute("href") === "#" + current);
       });
     });
-  }
-
-  document.addEventListener("DOMContentLoaded", gate);
-})();
   }
 
   document.addEventListener("DOMContentLoaded", gate);
