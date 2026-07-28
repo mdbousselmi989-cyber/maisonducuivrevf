@@ -32,12 +32,14 @@
       <span class="brand-mark" style="border-color:var(--gold-light);color:var(--gold-light);box-shadow:inset 0 0 0 3px var(--ink), inset 0 0 0 4px rgba(255,255,255,.14);">MC</span>
       <div><strong>Administration</strong><span>Maison du Cuivre</span></div>
     </div>
+    <a class="admin-nav-link" href="#sec-apparence">Apparence des cadres</a>
     <a class="admin-nav-link" href="#sec-identite">Identité &amp; logo</a>
     <a class="admin-nav-link" href="#sec-coordonnees">Coordonnées &amp; carte</a>
     <a class="admin-nav-link" href="#sec-couvertures">Images de couverture</a>
     <a class="admin-nav-link" href="#sec-accueil">Page Accueil</a>
     <a class="admin-nav-link" href="#sec-apropos">Page À propos</a>
     <a class="admin-nav-link" href="#sec-galerie">Page Galerie</a>
+    <a class="admin-nav-link" href="#sec-categories">Catégories de produits</a>
     <a class="admin-nav-link" href="#sec-produits">Produits</a>
     <a class="admin-nav-link" href="#sec-avis">Avis clients</a>
     <a class="admin-nav-link" href="#sec-sur-mesure">Page Sur mesure</a>
@@ -64,6 +66,35 @@
         <strong>tous vos visiteurs</strong>, cliquez sur « Enregistrer » puis « Télécharger site-data.js » et
         remplacez le fichier <code>js/site-data.js</code> du site avant de le redéployer — voir README.md.
       </p>
+
+      <!-- Apparence des cadres -->
+      <section id="sec-apparence" class="admin-section">
+        <h2>Apparence des cadres</h2>
+        <p class="admin-section-desc">Choisissez la forme des cadres d'image. S'applique à toutes les images du site (les curseurs de zoom/position de chaque image restent disponibles en plus pour affiner le cadrage).</p>
+
+        <div class="admin-grid-2">
+          <div class="field">
+            <label>Format des cartes produits (Accueil + Galerie)</label>
+            <select data-path="site.productFrameRatio">
+              <option value="1/1">Carré (1:1)</option>
+              <option value="4/3">Paysage standard (4:3)</option>
+              <option value="5/4">Paysage large (5:4)</option>
+              <option value="3/4">Portrait (3:4)</option>
+              <option value="16/9">Paysage panoramique (16:9)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Format de l'image « À propos »</label>
+            <select data-path="site.aboutFrameRatio">
+              <option value="1/1">Carré (1:1)</option>
+              <option value="4/3">Paysage standard (4:3)</option>
+              <option value="3/4">Portrait (3:4)</option>
+              <option value="4/5">Portrait large (4:5)</option>
+              <option value="16/9">Paysage panoramique (16:9)</option>
+            </select>
+          </div>
+        </div>
+      </section>
 
       <!-- Identité -->
       <section id="sec-identite" class="admin-section">
@@ -280,6 +311,14 @@
         <div class="field"><label>Texte du bandeau</label><textarea data-path="gallery.heroText"></textarea></div>
         <div class="field"><label>Titre du bandeau final</label><input type="text" data-path="gallery.ctaTitle"></div>
         <div class="field"><label>Texte du bandeau final</label><textarea data-path="gallery.ctaText"></textarea></div>
+      </section>
+
+      <!-- Catégories de produits -->
+      <section id="sec-categories" class="admin-section">
+        <h2>Catégories de produits</h2>
+        <p class="admin-section-desc">Renommez une catégorie existante ou ajoutez-en une nouvelle. Ces catégories sont proposées lors de la création/édition de chaque produit ci-dessous.</p>
+        <div id="rep-categories" class="repeater"></div>
+        <button type="button" id="add-category" class="btn btn-outline dark repeater-add">+ Ajouter une catégorie</button>
       </section>
 
       <!-- Produits -->
