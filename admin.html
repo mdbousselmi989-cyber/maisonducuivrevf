@@ -1,563 +1,358 @@
-// Maison du Cuivre — logique de la page d'administration
-(function () {
-  "use strict";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administration — Maison du Cuivre</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='47' fill='%23fffdf9' stroke='%23b3894f' stroke-width='3'/%3E%3Ctext x='50' y='63' font-size='38' text-anchor='middle' fill='%237a4a24' font-family='Georgia,serif'%3EMC%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<!-- EmailJS : permet d'envoyer un e-mail de récupération sans serveur -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
 
-  var PASSCODE_KEY = "mdc_admin_passcode";
-  var SESSION_KEY = "mdc_admin_session";
+<!-- Écran de verrouillage local (protection légère, non sécurisée — voir README.md) -->
+<div id="admin-gate" class="admin-gate">
+  <div class="form-card">
+    <h2 style="margin-bottom:6px;">Administration</h2>
+    <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:24px;">Maison du Cuivre — accès réservé</p>
 
-  // E-mail de récupération — fixé pour l'administration de ce site.
-  var ADMIN_RECOVERY_EMAIL = "mdbousselmi989@gmail.com";
+    <!-- Écran de connexion / création du mot de passe -->
+    <div id="gate-login">
+      <div class="field">
+        <label for="gate-password">Mot de passe</label>
+        <input type="password" id="gate-password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button id="gate-submit" class="btn btn-primary btn-block">Entrer</button>
+      <p id="gate-message" class="form-note"></p>
+      <p class="form-note" id="gate-forgot-wrap"><a href="#" id="gate-forgot-link" style="text-decoration:underline;">Mot de passe oublié ?</a></p>
+      <p class="form-note"><a href="index.html" style="text-decoration:underline;">← Retour au site</a></p>
+    </div>
 
-  // ------------------------------------------------------------------
-  // Configuration EmailJS — à remplir avec vos identifiants EmailJS
-  // (créez un compte gratuit sur https://www.emailjs.com, ajoutez un
-  // service e-mail (ex : Gmail) et un template avec les variables
-  // {{to_email}} et {{password}}). Voir README.md pour le détail.
-  // ------------------------------------------------------------------
-  var EMAILJS_PUBLIC_KEY = "VOTRE_CLE_PUBLIQUE_EMAILJS";
-  var EMAILJS_SERVICE_ID = "VOTRE_SERVICE_ID";
-  var EMAILJS_TEMPLATE_ID = "VOTRE_TEMPLATE_ID";
-  var EMAILJS_READY = EMAILJS_PUBLIC_KEY.indexOf("VOTRE_") !== 0;
+    <!-- Écran de récupération : envoi automatique à l'e-mail configuré -->
+    <div id="gate-forgot" style="display:none;">
+      <p style="color:var(--ink-soft);font-size:.85rem;margin-bottom:20px;">Le mot de passe actuel va être envoyé à l'adresse e-mail enregistrée pour l'administration de ce site.</p>
+      <button id="gate-forgot-submit" class="btn btn-primary btn-block">Recevoir mon mot de passe par e-mail</button>
+      <p id="gate-forgot-message" class="form-note"></p>
+      <p class="form-note"><a href="#" id="gate-back-link" style="text-decoration:underline;">← Retour à la connexion</a></p>
+    </div>
+  </div>
+</div>
 
-  // ------------------------------------------------------------------
-  // Verrou local (protection légère, non sécurisée)
-  // ------------------------------------------------------------------
-  function gate() {
-    var gateEl = document.getElementById("admin-gate");
-    var appEl = document.getElementById("admin-app");
+<!-- Interface d'administration -->
+<div id="admin-app" class="admin-shell" style="display:none;">
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <span class="brand-mark" style="border-color:var(--gold-light);color:var(--gold-light);box-shadow:inset 0 0 0 3px var(--ink), inset 0 0 0 4px rgba(255,255,255,.14);">MC</span>
+      <div><strong>Administration</strong><span>Maison du Cuivre</span></div>
+    </div>
+    <a class="admin-nav-link" href="#sec-identite">Identité &amp; logo</a>
+    <a class="admin-nav-link" href="#sec-coordonnees">Coordonnées &amp; carte</a>
+    <a class="admin-nav-link" href="#sec-couvertures">Images de couverture</a>
+    <a class="admin-nav-link" href="#sec-accueil">Page Accueil</a>
+    <a class="admin-nav-link" href="#sec-apropos">Page À propos</a>
+    <a class="admin-nav-link" href="#sec-galerie">Page Galerie</a>
+    <a class="admin-nav-link" href="#sec-produits">Produits</a>
+    <a class="admin-nav-link" href="#sec-avis">Avis clients</a>
+    <a class="admin-nav-link" href="#sec-sur-mesure">Page Sur mesure</a>
+    <a class="admin-nav-link" href="#sec-contact">Page Contact</a>
+    <a class="admin-view-link" href="index.html" target="_blank" rel="noopener">Voir le site ↗</a>
+  </aside>
 
-    var loginView = document.getElementById("gate-login");
-    var forgotView = document.getElementById("gate-forgot");
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <h1>Administration du site</h1>
+      <div class="admin-actions">
+        <button id="btn-reset" class="btn btn-outline dark">Réinitialiser</button>
+        <button id="btn-import" class="btn btn-outline dark">Importer</button>
+        <input type="file" id="import-file" accept=".js,.json,text/javascript,application/json" style="display:none;">
+        <button id="btn-export" class="btn btn-outline dark">Télécharger site-data.js</button>
+        <button id="btn-save" class="btn btn-primary">Enregistrer</button>
+      </div>
+    </div>
 
-    var passwordInput = document.getElementById("gate-password");
-    var msg = document.getElementById("gate-message");
-    var submit = document.getElementById("gate-submit");
+    <div class="admin-content">
 
-    var forgotLink = document.getElementById("gate-forgot-link");
-    var backLink = document.getElementById("gate-back-link");
-    var forgotSubmit = document.getElementById("gate-forgot-submit");
-    var forgotMsg = document.getElementById("gate-forgot-message");
+      <p class="form-note" style="margin:-10px 0 40px;">
+        Les modifications sont enregistrées dans ce navigateur (stockage local). Pour les rendre visibles à
+        <strong>tous vos visiteurs</strong>, cliquez sur « Enregistrer » puis « Télécharger site-data.js » et
+        remplacez le fichier <code>js/site-data.js</code> du site avant de le redéployer — voir README.md.
+      </p>
 
-    if (window.emailjs && EMAILJS_READY) {
-      try { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); } catch (e) { /* ignore */ }
-    }
+      <!-- Identité -->
+      <section id="sec-identite" class="admin-section">
+        <h2>Identité &amp; logo</h2>
+        <p class="admin-section-desc">Nom de la maison, slogan et logo affichés dans l'en-tête et le pied de page.</p>
 
-    function unlock() {
-      gateEl.style.display = "none";
-      appEl.style.display = "flex";
-      initAdmin();
-    }
+        <div class="admin-grid-2">
+          <div class="field"><label>Nom du site</label><input type="text" data-path="site.name"></div>
+          <div class="field"><label>Slogan</label><input type="text" data-path="site.tagline"></div>
+        </div>
+        <div class="field"><label>Initiales du logo (si pas d'image)</label><input type="text" maxlength="3" data-path="site.logoText" style="max-width:120px;"></div>
+        <div class="field">
+          <label>Image du logo (remplace les initiales)</label>
+          <div class="image-upload">
+            <div class="preview" id="preview-site.logoImage">Aucune</div>
+            <div class="upload-actions">
+              <input type="file" accept="image/*" data-image-path="site.logoImage" data-image-format="png" data-image-maxdim="300">
+              <button type="button" class="btn btn-outline dark" data-clear-image="site.logoImage" style="padding:8px 14px;font-size:.68rem;">Retirer</button>
+            </div>
+          </div>
+        </div>
+        <div class="field"><label>Texte « à propos » du pied de page</label><textarea data-path="site.footerAbout"></textarea></div>
+      </section>
 
-    if (sessionStorage.getItem(SESSION_KEY) === "1") {
-      unlock();
-      return;
-    }
+      <!-- Coordonnées -->
+      <section id="sec-coordonnees" class="admin-section">
+        <h2>Coordonnées &amp; localisation</h2>
+        <p class="admin-section-desc">Affichées dans le pied de page et la page Contact.</p>
 
-    var storedPass = localStorage.getItem(PASSCODE_KEY);
-    var isFirstVisit = !storedPass;
+        <div class="field"><label>Adresse</label><input type="text" data-path="site.address"></div>
+        <div class="admin-grid-2">
+          <div class="field"><label>Téléphone</label><input type="text" data-path="site.phone"></div>
+          <div class="field"><label>E-mail</label><input type="email" data-path="site.email"></div>
+        </div>
+        <div class="field"><label>Lien Facebook</label><input type="url" data-path="site.facebook"></div>
+        <div class="admin-grid-2">
+          <div class="field"><label>Horaires (semaine)</label><input type="text" data-path="site.hoursWeek"></div>
+          <div class="field"><label>Horaires (week-end)</label><input type="text" data-path="site.hoursWeekend"></div>
+        </div>
+        <div class="admin-grid-2">
+          <div class="field"><label>Latitude</label><input type="number" step="0.0001" data-path="site.lat"></div>
+          <div class="field"><label>Longitude</label><input type="number" step="0.0001" data-path="site.lng"></div>
+        </div>
+        <div class="field">
+          <label>Aperçu de la carte</label>
+          <div class="admin-map-preview"><iframe id="admin-map-preview" loading="lazy" title="Aperçu carte"></iframe></div>
+        </div>
+      </section>
 
-    if (isFirstVisit) {
-      msg.textContent = "Première visite : choisissez un mot de passe. En cas d'oubli, il pourra être renvoyé à " + ADMIN_RECOVERY_EMAIL + ".";
-      submit.textContent = "Créer le mot de passe";
-    }
+      <!-- Couvertures -->
+      <section id="sec-couvertures" class="admin-section">
+        <h2>Images de couverture</h2>
+        <p class="admin-section-desc">Photo affichée en fond du bandeau de chaque page (facultatif — sans image, le dégradé cuivre par défaut s'affiche).</p>
 
-    submit.addEventListener("click", function () {
-      var val = passwordInput.value.trim();
-      if (!val) return;
+        <div class="field">
+          <label>Couverture — Accueil</label>
+          <div class="image-upload">
+            <div class="preview" id="preview-covers.home">Aucune</div>
+            <div class="upload-actions">
+              <input type="file" accept="image/*" data-image-path="covers.home" data-image-format="jpeg" data-image-maxdim="1600">
+              <button type="button" class="btn btn-outline dark" data-clear-image="covers.home" style="padding:8px 14px;font-size:.68rem;">Retirer</button>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Couverture — À propos</label>
+          <div class="image-upload">
+            <div class="preview" id="preview-covers.about">Aucune</div>
+            <div class="upload-actions">
+              <input type="file" accept="image/*" data-image-path="covers.about" data-image-format="jpeg" data-image-maxdim="1600">
+              <button type="button" class="btn btn-outline dark" data-clear-image="covers.about" style="padding:8px 14px;font-size:.68rem;">Retirer</button>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Couverture — Galerie &amp; Produits</label>
+          <div class="image-upload">
+            <div class="preview" id="preview-covers.gallery">Aucune</div>
+            <div class="upload-actions">
+              <input type="file" accept="image/*" data-image-path="covers.gallery" data-image-format="jpeg" data-image-maxdim="1600">
+              <button type="button" class="btn btn-outline dark" data-clear-image="covers.gallery" style="padding:8px 14px;font-size:.68rem;">Retirer</button>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Couverture — Sur mesure</label>
+          <div class="image-upload">
+            <div class="preview" id="preview-covers.custom">Aucune</div>
+            <div class="upload-actions">
+              <input type="file" accept="image/*" data-image-path="covers.custom" data-image-format="jpeg" data-image-maxdim="1600">
+              <button type="button" class="btn btn-outline dark" data-clear-image="covers.custom" style="padding:8px 14px;font-size:.68rem;">Retirer</button>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Couverture — Contact</label>
+          <div class="image-upload">
+            <div class="preview" id="preview-covers.contact">Aucune</div>
+            <div class="upload-actions">
+              <input type="file" accept="image/*" data-image-path="covers.contact" data-image-format="jpeg" data-image-maxdim="1600">
+              <button type="button" class="btn btn-outline dark" data-clear-image="covers.contact" style="padding:8px 14px;font-size:.68rem;">Retirer</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      if (isFirstVisit) {
-        localStorage.setItem(PASSCODE_KEY, val);
-        sessionStorage.setItem(SESSION_KEY, "1");
-        unlock();
-        return;
-      }
+      <!-- Accueil -->
+      <section id="sec-accueil" class="admin-section">
+        <h2>Page Accueil</h2>
+        <p class="admin-section-desc">Textes du bandeau principal et des sections de la page d'accueil.</p>
 
-      if (val === storedPass) {
-        sessionStorage.setItem(SESSION_KEY, "1");
-        unlock();
-      } else {
-        msg.textContent = "Mot de passe incorrect.";
-        passwordInput.value = "";
-        passwordInput.focus();
-      }
-    });
+        <h3 style="font-size:1rem;margin:24px 0 12px;">Bandeau principal</h3>
+        <div class="field"><label>Eyebrow (petit texte au-dessus du titre)</label><input type="text" data-path="home.heroEyebrow"></div>
+        <div class="field"><label>Titre principal</label><input type="text" data-path="home.heroTitle"></div>
+        <div class="field"><label>Texte d'introduction</label><textarea data-path="home.heroLead"></textarea></div>
 
-    passwordInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") submit.click();
-    });
+        <h3 style="font-size:1rem;margin:24px 0 12px;">Section « Notre maison »</h3>
+        <div class="admin-grid-2">
+          <div class="field"><label>Eyebrow</label><input type="text" data-path="home.introEyebrow"></div>
+          <div class="field"><label>Titre</label><input type="text" data-path="home.introTitle"></div>
+        </div>
+        <div class="field"><label>Paragraphe 1</label><textarea data-path="home.introText1"></textarea></div>
+        <div class="field"><label>Paragraphe 2</label><textarea data-path="home.introText2"></textarea></div>
+        <div class="field">
+          <label>Image</label>
+          <div class="image-upload">
+            <div class="preview" id="preview-home.introImage">Aucune</div>
+            <div class="upload-actions">
+              <input type="file" accept="image/*" data-image-path="home.introImage" data-image-format="jpeg" data-image-maxdim="1200">
+              <button type="button" class="btn btn-outline dark" data-clear-image="home.introImage" style="padding:8px 14px;font-size:.68rem;">Retirer</button>
+            </div>
+          </div>
+        </div>
 
-    // ------------------------------------------------------------------
-    // Mot de passe oublié
-    // ------------------------------------------------------------------
-    forgotLink.addEventListener("click", function (e) {
-      e.preventDefault();
-      loginView.style.display = "none";
-      forgotView.style.display = "block";
-      forgotMsg.textContent = "";
-    });
+        <h3 style="font-size:1rem;margin:24px 0 12px;">Section « Produits phares »</h3>
+        <div class="admin-grid-2">
+          <div class="field"><label>Eyebrow</label><input type="text" data-path="home.productsEyebrow"></div>
+          <div class="field"><label>Titre</label><input type="text" data-path="home.productsTitle"></div>
+        </div>
+        <div class="field"><label>Texte</label><textarea data-path="home.productsText"></textarea></div>
 
-    backLink.addEventListener("click", function (e) {
-      e.preventDefault();
-      forgotView.style.display = "none";
-      loginView.style.display = "block";
-    });
+        <h3 style="font-size:1rem;margin:24px 0 12px;">Bandeau « Sur mesure »</h3>
+        <div class="admin-grid-2">
+          <div class="field"><label>Eyebrow</label><input type="text" data-path="home.customEyebrow"></div>
+          <div class="field"><label>Titre</label><input type="text" data-path="home.customTitle"></div>
+        </div>
+        <div class="field"><label>Texte</label><textarea data-path="home.customText"></textarea></div>
 
-    forgotSubmit.addEventListener("click", function () {
-      var currentPass = localStorage.getItem(PASSCODE_KEY);
+        <h3 style="font-size:1rem;margin:24px 0 12px;">Section « Avis clients »</h3>
+        <div class="admin-grid-2">
+          <div class="field"><label>Eyebrow</label><input type="text" data-path="home.reviewsEyebrow"></div>
+          <div class="field"><label>Titre</label><input type="text" data-path="home.reviewsTitle"></div>
+        </div>
+        <div class="field"><label>Texte</label><textarea data-path="home.reviewsText"></textarea></div>
 
-      if (!currentPass) {
-        forgotMsg.textContent = "Aucun mot de passe n'a encore été créé sur ce navigateur.";
-        return;
-      }
-      if (!window.emailjs || !EMAILJS_READY) {
-        forgotMsg.textContent = "Envoi d'e-mail non configuré — voir README.md (configuration EmailJS requise dans js/admin.js).";
-        return;
-      }
+        <h3 style="font-size:1rem;margin:24px 0 12px;">Bandeau « Venez découvrir l'atelier »</h3>
+        <div class="field"><label>Titre</label><input type="text" data-path="home.visitTitle"></div>
+        <div class="field"><label>Texte</label><textarea data-path="home.visitText"></textarea></div>
+      </section>
 
-      forgotSubmit.disabled = true;
-      forgotMsg.textContent = "Envoi en cours...";
+      <!-- À propos -->
+      <section id="sec-apropos" class="admin-section">
+        <h2>Page À propos</h2>
 
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        to_email: ADMIN_RECOVERY_EMAIL,
-        password: currentPass
-      }).then(function () {
-        forgotMsg.textContent = "E-mail envoyé à " + ADMIN_RECOVERY_EMAIL + " ! Vérifiez votre boîte de réception (et les spams).";
-        forgotSubmit.disabled = false;
-      }, function () {
-        forgotMsg.textContent = "Échec de l'envoi. Réessayez plus tard.";
-        forgotSubmit.disabled = false;
-      });
-    });
-  }
+        <h3 style="font-size:1rem;margin:0 0 12px;">Bandeau</h3>
+        <div class="field"><label>Titre</label><input type="text" data-path="about.heroTitle"></div>
+        <div class="field"><label>Texte</label><textarea data-path="about.heroText"></textarea></div>
 
-  // ------------------------------------------------------------------
-  // Données
-  // ------------------------------------------------------------------
-  var data;
+        <h3 style="font-size:1rem;margin:24px 0 12px;">Section « Qui sommes-nous »</h3>
+        <div class="admin-grid-2">
+          <div class="field"><label>Eyebrow</label><input type="text" data-path="about.introEyebrow"></div>
+          <div class="field"><label>Titre</label><input type="text" data-path="about.introTitle"></div>
+        </div>
+        <div class="field"><label>Paragraphe 1</label><textarea data-path="about.introText1"></textarea></div>
+        <div class="field"><label>Paragraphe 2</label><textarea data-path="about.introText2"></textarea></div>
+        <div class="field">
+          <label>Image</label>
+          <div class="image-upload">
+            <div class="preview" id="preview-about.introImage">Aucune</div>
+            <div class="upload-actions">
+              <input type="file" accept="image/*" data-image-path="about.introImage" data-image-format="jpeg" data-image-maxdim="1200">
+              <button type="button" class="btn btn-outline dark" data-clear-image="about.introImage" style="padding:8px 14px;font-size:.68rem;">Retirer</button>
+            </div>
+          </div>
+        </div>
 
-  function setPath(obj, path, value) {
-    var parts = path.split(".");
-    var cur = obj;
-    for (var i = 0; i < parts.length - 1; i++) {
-      if (!cur[parts[i]]) cur[parts[i]] = {};
-      cur = cur[parts[i]];
-    }
-    cur[parts[parts.length - 1]] = value;
-  }
+        <h3 style="font-size:1rem;margin:24px 0 12px;">Nos valeurs</h3>
+        <div class="admin-grid-2">
+          <div class="field"><label>Eyebrow</label><input type="text" data-path="about.valuesEyebrow"></div>
+          <div class="field"><label>Titre</label><input type="text" data-path="about.valuesTitle"></div>
+        </div>
+        <div id="rep-values" class="repeater"></div>
+        <button type="button" id="add-value" class="btn btn-outline dark repeater-add">+ Ajouter une valeur</button>
 
-  function getPath(obj, path) {
-    return window.MDC.resolvePath(obj, path);
-  }
+        <h3 style="font-size:1rem;margin:32px 0 12px;">Notre parcours</h3>
+        <div class="admin-grid-2">
+          <div class="field"><label>Eyebrow</label><input type="text" data-path="about.timelineEyebrow"></div>
+          <div class="field"><label>Titre</label><input type="text" data-path="about.timelineTitle"></div>
+        </div>
+        <div id="rep-timeline" class="repeater"></div>
+        <button type="button" id="add-timeline" class="btn btn-outline dark repeater-add">+ Ajouter une étape</button>
 
-  function toast(text) {
-    var el = document.getElementById("admin-toast");
-    el.textContent = text;
-    el.classList.add("show");
-    clearTimeout(toast._t);
-    toast._t = setTimeout(function () { el.classList.remove("show"); }, 2600);
-  }
+        <h3 style="font-size:1rem;margin:32px 0 12px;">Bandeau final</h3>
+        <div class="field"><label>Titre</label><input type="text" data-path="about.ctaTitle"></div>
+        <div class="field"><label>Texte</label><textarea data-path="about.ctaText"></textarea></div>
+      </section>
 
-  // ------------------------------------------------------------------
-  // Champs simples liés par data-path
-  // ------------------------------------------------------------------
-  function bindSimpleFields() {
-    document.querySelectorAll("[data-path]").forEach(function (el) {
-      var path = el.getAttribute("data-path");
-      var val = getPath(data, path);
-      el.value = val === undefined || val === null ? "" : val;
-      el.addEventListener("input", function () {
-        var v = el.type === "number" ? parseFloat(el.value) : el.value;
-        setPath(data, path, v);
-        if (path === "site.lat" || path === "site.lng") updateMapPreview();
-        if (path === "site.logoText") refreshImagePreview("site.logoImage");
-      });
-    });
-  }
+      <!-- Galerie -->
+      <section id="sec-galerie" class="admin-section">
+        <h2>Page Galerie</h2>
+        <div class="field"><label>Titre du bandeau</label><input type="text" data-path="gallery.heroTitle"></div>
+        <div class="field"><label>Texte du bandeau</label><textarea data-path="gallery.heroText"></textarea></div>
+        <div class="field"><label>Titre du bandeau final</label><input type="text" data-path="gallery.ctaTitle"></div>
+        <div class="field"><label>Texte du bandeau final</label><textarea data-path="gallery.ctaText"></textarea></div>
+      </section>
 
-  // ------------------------------------------------------------------
-  // Upload d'images (avec compression via canvas)
-  // ------------------------------------------------------------------
-  function refreshImagePreview(path) {
-    var box = document.getElementById("preview-" + path);
-    if (!box) return;
-    var val = getPath(data, path);
-    if (val) {
-      box.innerHTML = '<img src="' + val + '" alt="">';
-    } else {
-      box.textContent = "Aucune";
-    }
-  }
+      <!-- Produits -->
+      <section id="sec-produits" class="admin-section">
+        <h2>Produits</h2>
+        <p class="admin-section-desc">Affichés sur la page Galerie, et les produits « vedette » aussi sur l'Accueil.</p>
+        <div id="rep-products" class="repeater"></div>
+        <button type="button" id="add-product" class="btn btn-outline dark repeater-add">+ Ajouter un produit</button>
+      </section>
 
-  function readImageCompressed(file, maxDim, format, cb) {
-    var reader = new FileReader();
-    reader.onload = function (e) {
-      var img = new Image();
-      img.onload = function () {
-        var w = img.width, h = img.height;
-        if (w > maxDim || h > maxDim) {
-          if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
-          else { w = Math.round((w * maxDim) / h); h = maxDim; }
-        }
-        var canvas = document.createElement("canvas");
-        canvas.width = w; canvas.height = h;
-        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-        cb(canvas.toDataURL(format === "png" ? "image/png" : "image/jpeg", 0.85));
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
+      <!-- Avis -->
+      <section id="sec-avis" class="admin-section">
+        <h2>Avis clients</h2>
+        <p class="admin-section-desc">Affichés sur la page d'accueil. Remplacez les exemples par vos vrais avis Facebook.</p>
+        <div id="rep-testimonials" class="repeater"></div>
+        <button type="button" id="add-testimonial" class="btn btn-outline dark repeater-add">+ Ajouter un avis</button>
+      </section>
 
-  function bindImageUploads() {
-    document.querySelectorAll("[data-image-path]").forEach(function (input) {
-      var path = input.getAttribute("data-image-path");
-      var maxDim = parseInt(input.getAttribute("data-image-maxdim") || "1200", 10);
-      var format = input.getAttribute("data-image-format") || "jpeg";
-      refreshImagePreview(path);
-      input.addEventListener("change", function () {
-        var file = input.files && input.files[0];
-        if (!file) return;
-        readImageCompressed(file, maxDim, format, function (dataUrl) {
-          setPath(data, path, dataUrl);
-          refreshImagePreview(path);
-          toast("Image chargée — pensez à Enregistrer");
-        });
-        input.value = "";
-      });
-    });
+      <!-- Sur mesure -->
+      <section id="sec-sur-mesure" class="admin-section">
+        <h2>Page Sur mesure</h2>
+        <h3 style="font-size:1rem;margin:0 0 12px;">Bandeau</h3>
+        <div class="field"><label>Titre</label><input type="text" data-path="custom.heroTitle"></div>
+        <div class="field"><label>Texte</label><textarea data-path="custom.heroText"></textarea></div>
 
-    document.querySelectorAll("[data-clear-image]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var path = btn.getAttribute("data-clear-image");
-        setPath(data, path, "");
-        refreshImagePreview(path);
-      });
-    });
-  }
+        <h3 style="font-size:1rem;margin:24px 0 12px;">Processus de commande</h3>
+        <div class="admin-grid-2">
+          <div class="field"><label>Eyebrow</label><input type="text" data-path="custom.stepsEyebrow"></div>
+          <div class="field"><label>Titre</label><input type="text" data-path="custom.stepsTitle"></div>
+        </div>
+        <div class="field"><label>Texte</label><textarea data-path="custom.stepsText"></textarea></div>
+        <div id="rep-steps" class="repeater"></div>
+        <button type="button" id="add-step" class="btn btn-outline dark repeater-add">+ Ajouter une étape</button>
 
-  // ------------------------------------------------------------------
-  // Carte (aperçu)
-  // ------------------------------------------------------------------
-  function updateMapPreview() {
-    var el = document.getElementById("admin-map-preview");
-    if (!el) return;
-    var lat = Number(data.site.lat), lng = Number(data.site.lng);
-    if (isNaN(lat) || isNaN(lng)) return;
-    var d = 0.01;
-    var bbox = [lng - d, lat - d, lng + d, lat + d].join(",");
-    el.src = "https://www.openstreetmap.org/export/embed.html?bbox=" + encodeURIComponent(bbox) + "&layer=mapnik&marker=" + lat + "," + lng;
-  }
+        <h3 style="font-size:1rem;margin:32px 0 12px;">Bandeau final</h3>
+        <div class="field"><label>Titre</label><input type="text" data-path="custom.ctaTitle"></div>
+        <div class="field"><label>Texte</label><textarea data-path="custom.ctaText"></textarea></div>
+      </section>
 
-  // ------------------------------------------------------------------
-  // Répéteurs génériques (valeurs, timeline, produits, avis, étapes)
-  // ------------------------------------------------------------------
-  function esc(str) {
-    return String(str == null ? "" : str).replace(/"/g, "&quot;");
-  }
+      <!-- Contact -->
+      <section id="sec-contact" class="admin-section">
+        <h2>Page Contact</h2>
+        <h3 style="font-size:1rem;margin:0 0 12px;">Bandeau</h3>
+        <div class="field"><label>Titre</label><input type="text" data-path="contact.heroTitle"></div>
+        <div class="field"><label>Texte</label><textarea data-path="contact.heroText"></textarea></div>
 
-  function makeField(labelText, value, onInput, type) {
-    var wrap = document.createElement("div");
-    wrap.className = "field";
-    var label = document.createElement("label");
-    label.textContent = labelText;
-    wrap.appendChild(label);
-    var input = document.createElement(type === "textarea" ? "textarea" : "input");
-    if (type !== "textarea") input.type = type || "text";
-    input.value = value == null ? "" : value;
-    input.addEventListener("input", function () { onInput(input.value); });
-    wrap.appendChild(input);
-    return wrap;
-  }
+        <h3 style="font-size:1rem;margin:24px 0 12px;">Section localisation</h3>
+        <div class="field"><label>Titre</label><input type="text" data-path="contact.mapTitle"></div>
+        <div class="field"><label>Texte</label><textarea data-path="contact.mapText"></textarea></div>
+        <div class="field"><label>Note sous la carte</label><textarea data-path="contact.mapNote"></textarea></div>
+      </section>
 
-  function repeaterShell(containerId, items, renderItem, emptyLabel) {
-    var container = document.getElementById(containerId);
-    container.innerHTML = "";
-    if (!items.length) {
-      var empty = document.createElement("div");
-      empty.className = "repeater-empty";
-      empty.textContent = emptyLabel;
-      container.appendChild(empty);
-      return;
-    }
-    items.forEach(function (item, i) {
-      var row = document.createElement("div");
-      row.className = "repeater-item";
-      renderItem(row, item, i);
-      var removeBtn = document.createElement("button");
-      removeBtn.type = "button";
-      removeBtn.className = "repeater-remove";
-      removeBtn.textContent = "✕";
-      removeBtn.title = "Supprimer";
-      removeBtn.addEventListener("click", function () {
-        items.splice(i, 1);
-        renderAllRepeaters();
-      });
-      row.appendChild(removeBtn);
-      container.appendChild(row);
-    });
-  }
+    </div>
+  </div>
+</div>
 
-  function renderValues() {
-    repeaterShell("rep-values", data.about.values, function (row, item) {
-      row.appendChild(makeField("Titre", item.title, function (v) { item.title = v; }));
-      row.appendChild(makeField("Texte", item.text, function (v) { item.text = v; }, "textarea"));
-    }, "Aucune valeur — ajoutez-en une.");
-  }
+<div id="admin-toast" class="admin-toast"></div>
 
-  function renderTimeline() {
-    repeaterShell("rep-timeline", data.about.timeline, function (row, item) {
-      row.appendChild(makeField("Période (ex: Les débuts)", item.year, function (v) { item.year = v; }));
-      row.appendChild(makeField("Titre", item.title, function (v) { item.title = v; }));
-      row.appendChild(makeField("Texte", item.text, function (v) { item.text = v; }, "textarea"));
-    }, "Aucune étape — ajoutez-en une.");
-  }
-
-  function renderSteps() {
-    repeaterShell("rep-steps", data.custom.steps, function (row, item) {
-      row.appendChild(makeField("Titre", item.title, function (v) { item.title = v; }));
-      row.appendChild(makeField("Texte", item.text, function (v) { item.text = v; }, "textarea"));
-    }, "Aucune étape — ajoutez-en une.");
-  }
-
-  function renderTestimonials() {
-    repeaterShell("rep-testimonials", data.testimonials, function (row, item) {
-      var grid = document.createElement("div");
-      grid.className = "admin-grid-2";
-      grid.appendChild(makeField("Nom du client", item.name, function (v) { item.name = v; }));
-      grid.appendChild(makeField("Ville / lieu", item.location, function (v) { item.location = v; }));
-      row.appendChild(grid);
-      row.appendChild(makeField("Avis", item.quote, function (v) { item.quote = v; }, "textarea"));
-      var ratingWrap = document.createElement("div");
-      ratingWrap.className = "field";
-      var label = document.createElement("label");
-      label.textContent = "Note (1 à 5)";
-      ratingWrap.appendChild(label);
-      var select = document.createElement("select");
-      [5, 4, 3, 2, 1].forEach(function (n) {
-        var opt = document.createElement("option");
-        opt.value = n; opt.textContent = n + " étoile" + (n > 1 ? "s" : "");
-        if (Number(item.rating) === n) opt.selected = true;
-        select.appendChild(opt);
-      });
-      select.addEventListener("input", function () { item.rating = Number(select.value); });
-      ratingWrap.appendChild(select);
-      row.appendChild(ratingWrap);
-    }, "Aucun avis — ajoutez-en un.");
-  }
-
-  function renderProducts() {
-    var categories = [
-      { value: "plateaux", label: "Plateaux" },
-      { value: "table", label: "Art de la table" },
-      { value: "luminaires", label: "Luminaires" },
-      { value: "decoration", label: "Décoration" }
-    ];
-    repeaterShell("rep-products", data.products, function (row, item, i) {
-      var grid = document.createElement("div");
-      grid.className = "admin-grid-2";
-      grid.appendChild(makeField("Nom du produit", item.name, function (v) { item.name = v; }));
-
-      var catWrap = document.createElement("div");
-      catWrap.className = "field";
-      var catLabel = document.createElement("label");
-      catLabel.textContent = "Catégorie";
-      catWrap.appendChild(catLabel);
-      var select = document.createElement("select");
-      categories.forEach(function (c) {
-        var opt = document.createElement("option");
-        opt.value = c.value; opt.textContent = c.label;
-        if (item.category === c.value) opt.selected = true;
-        select.appendChild(opt);
-      });
-      select.addEventListener("input", function () { item.category = select.value; });
-      catWrap.appendChild(select);
-      grid.appendChild(catWrap);
-      row.appendChild(grid);
-
-      row.appendChild(makeField("Description (page Galerie)", item.description, function (v) { item.description = v; }, "textarea"));
-      row.appendChild(makeField("Description courte (page Accueil)", item.homeDescription, function (v) { item.homeDescription = v; }, "textarea"));
-
-      var grid2 = document.createElement("div");
-      grid2.className = "admin-grid-2";
-      grid2.appendChild(makeField("Prix affiché", item.price, function (v) { item.price = v; }));
-      grid2.appendChild(makeField("Étiquette (ex: Best-seller, laisser vide sinon)", item.tag, function (v) { item.tag = v; }));
-      row.appendChild(grid2);
-
-      var featWrap = document.createElement("label");
-      featWrap.className = "admin-checkbox";
-      var featInput = document.createElement("input");
-      featInput.type = "checkbox";
-      featInput.checked = !!item.featuredHome;
-      featInput.addEventListener("change", function () { item.featuredHome = featInput.checked; });
-      featWrap.appendChild(featInput);
-      featWrap.appendChild(document.createTextNode("Mettre en avant sur la page d'accueil"));
-      row.appendChild(featWrap);
-
-      var imgPath = "products." + i + ".image";
-      var imgField = document.createElement("div");
-      imgField.className = "field";
-      var imgLabel = document.createElement("label");
-      imgLabel.textContent = "Image du produit";
-      imgField.appendChild(imgLabel);
-      var upload = document.createElement("div");
-      upload.className = "image-upload";
-      var preview = document.createElement("div");
-      preview.className = "preview";
-      preview.id = "preview-" + imgPath;
-      preview.innerHTML = item.image ? '<img src="' + esc(item.image) + '" alt="">' : "Aucune";
-      upload.appendChild(preview);
-      var actions = document.createElement("div");
-      actions.className = "upload-actions";
-      var fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.accept = "image/*";
-      fileInput.addEventListener("change", function () {
-        var file = fileInput.files && fileInput.files[0];
-        if (!file) return;
-        readImageCompressed(file, 1000, "jpeg", function (dataUrl) {
-          item.image = dataUrl;
-          preview.innerHTML = '<img src="' + dataUrl + '" alt="">';
-          toast("Image chargée — pensez à Enregistrer");
-        });
-        fileInput.value = "";
-      });
-      actions.appendChild(fileInput);
-      var clearBtn = document.createElement("button");
-      clearBtn.type = "button";
-      clearBtn.className = "btn btn-outline dark";
-      clearBtn.style.cssText = "padding:8px 14px;font-size:.68rem;";
-      clearBtn.textContent = "Retirer";
-      clearBtn.addEventListener("click", function () {
-        item.image = "";
-        preview.textContent = "Aucune";
-      });
-      actions.appendChild(clearBtn);
-      upload.appendChild(actions);
-      imgField.appendChild(upload);
-      row.appendChild(imgField);
-    }, "Aucun produit — ajoutez-en un.");
-  }
-
-  function renderAllRepeaters() {
-    renderValues();
-    renderTimeline();
-    renderSteps();
-    renderTestimonials();
-    renderProducts();
-  }
-
-  // ------------------------------------------------------------------
-  // Boutons globaux
-  // ------------------------------------------------------------------
-  function bindToolbar() {
-    document.getElementById("btn-save").addEventListener("click", function () {
-      localStorage.setItem(window.MDC.STORAGE_KEY, JSON.stringify(data));
-      toast("Enregistré ✓ (dans ce navigateur)");
-    });
-
-    document.getElementById("btn-export").addEventListener("click", function () {
-      localStorage.setItem(window.MDC.STORAGE_KEY, JSON.stringify(data));
-      var content = "// Maison du Cuivre — Données du site (généré depuis l'administration)\n" +
-        "window.MDC_DEFAULT_DATA = " + JSON.stringify(data, null, 2) + ";\n";
-      var blob = new Blob([content], { type: "text/javascript" });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement("a");
-      a.href = url; a.download = "site-data.js";
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      toast("Téléchargé — remplacez js/site-data.js dans votre site");
-    });
-
-    document.getElementById("btn-import").addEventListener("click", function () {
-      document.getElementById("import-file").click();
-    });
-
-    document.getElementById("import-file").addEventListener("change", function (e) {
-      var file = e.target.files && e.target.files[0];
-      if (!file) return;
-      var reader = new FileReader();
-      reader.onload = function (ev) {
-        var text = ev.target.result;
-        var parsed = null;
-        try { parsed = JSON.parse(text); }
-        catch (err) {
-          var m = text.match(/=\s*(\{[\s\S]*\})\s*;?\s*$/);
-          if (m) { try { parsed = JSON.parse(m[1]); } catch (err2) { parsed = null; } }
-        }
-        if (!parsed) { toast("Fichier invalide"); return; }
-        data = window.MDC.deepMerge(window.MDC_DEFAULT_DATA, parsed);
-        refreshAllFields();
-        toast("Données importées — pensez à Enregistrer");
-      };
-      reader.readAsText(file);
-      e.target.value = "";
-    });
-
-    document.getElementById("btn-reset").addEventListener("click", function () {
-      if (!confirm("Réinitialiser toutes les modifications enregistrées dans ce navigateur ? Cette action est irréversible.")) return;
-      localStorage.removeItem(window.MDC.STORAGE_KEY);
-      data = JSON.parse(JSON.stringify(window.MDC_DEFAULT_DATA));
-      refreshAllFields();
-      toast("Réinitialisé");
-    });
-  }
-
-  function refreshAllFields() {
-    document.querySelectorAll("[data-path]").forEach(function (el) {
-      var val = getPath(data, el.getAttribute("data-path"));
-      el.value = val === undefined || val === null ? "" : val;
-    });
-    document.querySelectorAll("[data-image-path]").forEach(function (el) {
-      refreshImagePreview(el.getAttribute("data-image-path"));
-    });
-    updateMapPreview();
-    renderAllRepeaters();
-  }
-
-  // ------------------------------------------------------------------
-  // Init
-  // ------------------------------------------------------------------
-  function initAdmin() {
-    data = JSON.parse(JSON.stringify(window.MDC.getData()));
-    bindSimpleFields();
-    bindImageUploads();
-    updateMapPreview();
-    renderAllRepeaters();
-    bindToolbar();
-
-    document.getElementById("add-value").addEventListener("click", function () {
-      data.about.values.push({ title: "Nouvelle valeur", text: "" });
-      renderValues();
-    });
-    document.getElementById("add-timeline").addEventListener("click", function () {
-      data.about.timeline.push({ year: "", title: "Nouvelle étape", text: "" });
-      renderTimeline();
-    });
-    document.getElementById("add-step").addEventListener("click", function () {
-      data.custom.steps.push({ title: "Nouvelle étape", text: "" });
-      renderSteps();
-    });
-    document.getElementById("add-testimonial").addEventListener("click", function () {
-      data.testimonials.push({ name: "Nouveau client", location: "", quote: "", rating: 5 });
-      renderTestimonials();
-    });
-    document.getElementById("add-product").addEventListener("click", function () {
-      data.products.push({ id: "produit-" + Date.now(), name: "Nouveau produit", category: "decoration", description: "", homeDescription: "", image: "", price: "Sur devis", tag: "", featuredHome: false });
-      renderProducts();
-    });
-
-    // Navigation latérale : mise en surbrillance de la section visible
-    var links = document.querySelectorAll(".admin-nav-link");
-    var sections = document.querySelectorAll(".admin-section");
-    window.addEventListener("scroll", function () {
-      var pos = window.scrollY + 120;
-      var current = sections[0] && sections[0].id;
-      sections.forEach(function (s) { if (s.offsetTop <= pos) current = s.id; });
-      links.forEach(function (l) {
-        l.classList.toggle("active", l.getAttribute("href") === "#" + current);
-      });
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", gate);
-})();
+<script src="js/site-data.js"></script>
+<script src="js/render.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
