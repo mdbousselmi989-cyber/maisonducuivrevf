@@ -299,7 +299,7 @@ p { margin: 0 0 1em; }
 
 /* === Image des cartes produits : remplit tout le cadre, cadrage réglable === */
 .card-media {
-  aspect-ratio: 5/4;
+  aspect-ratio: 1/1;
   background: var(--paper-deep);
   display: flex;
   align-items: center;
@@ -471,7 +471,7 @@ p { margin: 0 0 1em; }
 }
 /* === Visuel "À propos" : remplit tout le cadre, cadrage réglable === */
 .about-visual {
-  aspect-ratio: 4/5;
+  aspect-ratio: 3/4;
   background: var(--paper-deep);
   display: flex; align-items: center; justify-content: center;
   padding: 0;
