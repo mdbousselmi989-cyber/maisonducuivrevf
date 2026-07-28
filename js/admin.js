@@ -14,62 +14,9 @@
   // service e-mail (ex : Gmail) et un template avec les variables
   // {{to_email}} et {{password}}). Voir README.md pour le détail.
   // ------------------------------------------------------------------
-  var EMAILJS_PUBLIC_KEY = "VOTRE_CLE_PUBLIQUE_EMAILJS";
-  var EMAILJS_SERVICE_ID = "VOTRE_SERVICE_ID";
-  var EMAILJS_TEMPLATE_ID = "VOTRE_TEMPLATE_ID";
-  var EMAILJS_READY = EMAILJS_PUBLIC_KEY.indexOf("VOTRE_") !== 0;
-
-  // ------------------------------------------------------------------
-  // Verrou local (protection légère, non sécurisée)
-  // ------------------------------------------------------------------
-  function gate() {
-    var gateEl = document.getElementById("admin-gate");
-    var appEl = document.getElementById("admin-app");
-
-    var loginView = document.getElementById("gate-login");
-    var forgotView = document.getElementById("gate-forgot");
-
-    var passwordInput = document.getElementById("gate-password");
-    var msg = document.getElementById("gate-message");
-    var submit = document.getElementById("gate-submit");
-
-    var forgotLink = document.getElementById("gate-forgot-link");
-    var backLink = document.getElementById("gate-back-link");
-    var forgotSubmit = document.getElementById("gate-forgot-submit");
-    var forgotMsg = document.getElementById("gate-forgot-message");
-
-    if (window.emailjs && EMAILJS_READY) {
-      try { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); } catch (e) { /* ignore */ }
-    }
-
-    function unlock() {
-      gateEl.style.display = "none";
-      appEl.style.display = "flex";
-      initAdmin();
-    }
-
-    if (sessionStorage.getItem(SESSION_KEY) === "1") {
-      unlock();
-      return;
-    }// Maison du Cuivre — logique de la page d'administration
-(function () {
-  "use strict";
-
-  var PASSCODE_KEY = "mdc_admin_passcode";
-  var SESSION_KEY = "mdc_admin_session";
-
-  // E-mail de récupération — fixé pour l'administration de ce site.
-  var ADMIN_RECOVERY_EMAIL = "mdbousselmi989@gmail.com";
-
-  // ------------------------------------------------------------------
-  // Configuration EmailJS — à remplir avec vos identifiants EmailJS
-  // (créez un compte gratuit sur https://www.emailjs.com, ajoutez un
-  // service e-mail (ex : Gmail) et un template avec les variables
-  // {{to_email}} et {{password}}). Voir README.md pour le détail.
-  // ------------------------------------------------------------------
-  var EMAILJS_PUBLIC_KEY = "VOTRE_CLE_PUBLIQUE_EMAILJS";
-  var EMAILJS_SERVICE_ID = "VOTRE_SERVICE_ID";
-  var EMAILJS_TEMPLATE_ID = "VOTRE_TEMPLATE_ID";
+  var EMAILJS_PUBLIC_KEY = "82rRQZyvm5Vka6k9_";
+  var EMAILJS_SERVICE_ID = "service_xuu93ng";
+  var EMAILJS_TEMPLATE_ID = "template_unht8gp";
   var EMAILJS_READY = EMAILJS_PUBLIC_KEY.indexOf("VOTRE_") !== 0;
 
   // ------------------------------------------------------------------
