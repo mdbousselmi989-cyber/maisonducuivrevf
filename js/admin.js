@@ -2,22 +2,10 @@
 (function () {
   "use strict";
 
-  var PASSCODE_KEY = "mdc_admin_passcode";
   var SESSION_KEY = "mdc_admin_session";
 
-  // E-mail de récupération — fixé pour l'administration de ce site.
-  var ADMIN_RECOVERY_EMAIL = "mdbousselmi989@gmail.com";
-
-  // ------------------------------------------------------------------
-  // Configuration EmailJS — à remplir avec vos identifiants EmailJS
-  // (créez un compte gratuit sur https://www.emailjs.com, ajoutez un
-  // service e-mail (ex : Gmail) et un template avec les variables
-  // {{to_email}} et {{password}}). Voir README.md pour le détail.
-  // ------------------------------------------------------------------
-  var EMAILJS_PUBLIC_KEY = "82rRQZyvm5Vka6k9_";
-  var EMAILJS_SERVICE_ID = "service_xuu93ng";
-  var EMAILJS_TEMPLATE_ID = "template_unht8gp";
-  var EMAILJS_READY = EMAILJS_PUBLIC_KEY.indexOf("VOTRE_") !== 0;
+  // Mot de passe fixe d'accès à l'administration.
+  var ADMIN_PASSWORD = "maisonducuivre2026";
 
   // ------------------------------------------------------------------
   // Verrou local (protection légère, non sécurisée)
@@ -25,22 +13,9 @@
   function gate() {
     var gateEl = document.getElementById("admin-gate");
     var appEl = document.getElementById("admin-app");
-
-    var loginView = document.getElementById("gate-login");
-    var forgotView = document.getElementById("gate-forgot");
-
-    var passwordInput = document.getElementById("gate-password");
+    var input = document.getElementById("gate-password");
     var msg = document.getElementById("gate-message");
     var submit = document.getElementById("gate-submit");
-
-    var forgotLink = document.getElementById("gate-forgot-link");
-    var backLink = document.getElementById("gate-back-link");
-    var forgotSubmit = document.getElementById("gate-forgot-submit");
-    var forgotMsg = document.getElementById("gate-forgot-message");
-
-    if (window.emailjs && EMAILJS_READY) {
-      try { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); } catch (e) { /* ignore */ }
-    }
 
     function unlock() {
       gateEl.style.display = "none";
@@ -53,82 +28,20 @@
       return;
     }
 
-    var storedPass = localStorage.getItem(PASSCODE_KEY);
-    var isFirstVisit = !storedPass;
-
-    if (isFirstVisit) {
-      msg.textContent = "Première visite : choisissez un mot de passe. En cas d'oubli, il pourra être renvoyé à " + ADMIN_RECOVERY_EMAIL + ".";
-      submit.textContent = "Créer le mot de passe";
-    }
-
     submit.addEventListener("click", function () {
-      var val = passwordInput.value.trim();
+      var val = input.value.trim();
       if (!val) return;
-
-      if (isFirstVisit) {
-        localStorage.setItem(PASSCODE_KEY, val);
-        sessionStorage.setItem(SESSION_KEY, "1");
-        unlock();
-        return;
-      }
-
-      if (val === storedPass) {
+      if (val === ADMIN_PASSWORD) {
         sessionStorage.setItem(SESSION_KEY, "1");
         unlock();
       } else {
         msg.textContent = "Mot de passe incorrect.";
-        passwordInput.value = "";
-        passwordInput.focus();
+        input.value = "";
+        input.focus();
       }
     });
-
-    passwordInput.addEventListener("keydown", function (e) {
+    input.addEventListener("keydown", function (e) {
       if (e.key === "Enter") submit.click();
-    });
-
-    // ------------------------------------------------------------------
-    // Mot de passe oublié
-    // ------------------------------------------------------------------
-    forgotLink.addEventListener("click", function (e) {
-      e.preventDefault();
-      loginView.style.display = "none";
-      forgotView.style.display = "block";
-      forgotMsg.textContent = "";
-    });
-
-    backLink.addEventListener("click", function (e) {
-      e.preventDefault();
-      forgotView.style.display = "none";
-      loginView.style.display = "block";
-    });
-
-    forgotSubmit.addEventListener("click", function () {
-      var currentPass = localStorage.getItem(PASSCODE_KEY);
-
-      if (!currentPass) {
-        forgotMsg.textContent = "Aucun mot de passe n'a encore été créé sur ce navigateur.";
-        return;
-      }
-      if (!window.emailjs || !EMAILJS_READY) {
-        forgotMsg.textContent = "Envoi d'e-mail non configuré — voir README.md (configuration EmailJS requise dans js/admin.js).";
-        return;
-      }
-
-      forgotSubmit.disabled = true;
-      forgotMsg.textContent = "Envoi en cours...";
-
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        to_email: ADMIN_RECOVERY_EMAIL,
-        password: currentPass
-      }).then(function () {
-        forgotMsg.textContent = "E-mail envoyé à " + ADMIN_RECOVERY_EMAIL + " ! Vérifiez votre boîte de réception (et les spams).";
-        forgotSubmit.disabled = false;
-      }, function (err) {
-        var detail = (err && (err.text || err.message)) ? (err.text || err.message) : JSON.stringify(err);
-        forgotMsg.textContent = "Échec de l'envoi : " + detail;
-        forgotSubmit.disabled = false;
-        console.error("EmailJS error:", err);
-      });
     });
   }
 
@@ -546,57 +459,6 @@
     document.getElementById("add-product").addEventListener("click", function () {
       data.products.push({ id: "produit-" + Date.now(), name: "Nouveau produit", category: "decoration", description: "", homeDescription: "", image: "", price: "Sur devis", tag: "", featuredHome: false });
       renderProducts();
-    });
-
-    // ------------------------------------------------------------------
-    // Changement de mot de passe (depuis l'admin, une fois connecté)
-    // ------------------------------------------------------------------
-    var pwdCurrent = document.getElementById("pwd-current");
-    var pwdNew = document.getElementById("pwd-new");
-    var pwdConfirm = document.getElementById("pwd-confirm");
-    var pwdMsg = document.getElementById("pwd-message");
-    var pwdBtn = document.getElementById("btn-change-password");
-
-    pwdBtn.addEventListener("click", function () {
-      var current = localStorage.getItem(PASSCODE_KEY);
-      var typedCurrent = pwdCurrent.value;
-      var newVal = pwdNew.value.trim();
-      var confirmVal = pwdConfirm.value.trim();
-
-      if (!typedCurrent || typedCurrent !== current) {
-        pwdMsg.textContent = "Mot de passe actuel incorrect.";
-        return;
-      }
-      if (!newVal || newVal.length < 4) {
-        pwdMsg.textContent = "Le nouveau mot de passe doit contenir au moins 4 caractères.";
-        return;
-      }
-      if (newVal !== confirmVal) {
-        pwdMsg.textContent = "Les deux nouveaux mots de passe ne correspondent pas.";
-        return;
-      }
-
-      localStorage.setItem(PASSCODE_KEY, newVal);
-      pwdCurrent.value = "";
-      pwdNew.value = "";
-      pwdConfirm.value = "";
-
-      if (window.emailjs && EMAILJS_READY) {
-        pwdMsg.textContent = "Mot de passe changé ✓ Envoi de la confirmation par e-mail...";
-        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-          to_email: ADMIN_RECOVERY_EMAIL,
-          password: newVal
-        }).then(function () {
-          pwdMsg.textContent = "Mot de passe changé ✓ Confirmation envoyée à " + ADMIN_RECOVERY_EMAIL + ".";
-        }, function (err) {
-          var detail = (err && (err.text || err.message)) ? (err.text || err.message) : JSON.stringify(err);
-          pwdMsg.textContent = "Mot de passe changé ✓ (échec de l'envoi de confirmation : " + detail + ")";
-          console.error("EmailJS error:", err);
-        });
-      } else {
-        pwdMsg.textContent = "Mot de passe changé ✓ (envoi d'e-mail non configuré — voir README.md).";
-      }
-      toast("Mot de passe changé ✓");
     });
 
     // Navigation latérale : mise en surbrillance de la section visible
