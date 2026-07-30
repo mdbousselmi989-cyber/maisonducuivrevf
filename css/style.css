@@ -285,7 +285,11 @@ p { margin: 0 0 1em; }
   border: 1px solid var(--line);
 }
 .grid-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* === CORRIGÉ : la grille s'adapte au nombre réel de cartes,
+   plus de case vide quand il y a moins de 4 éléments === */
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
 .grid-2 { grid-template-columns: repeat(2, 1fr); gap: 48px; background: none; border: none; }
 
 .card {
@@ -661,7 +665,6 @@ p { margin: 0 0 1em; }
 
 /* Responsive */
 @media (max-width: 960px) {
-  .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .about-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -678,8 +681,8 @@ p { margin: 0 0 1em; }
   .main-nav a { display: block; text-align: center; margin: 0; padding: 14px; }
   .main-nav a::after { display: none; }
   .nav-toggle { display: flex; }
-  .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 32px; }
-  .grid-4, .grid-3 { gap: 1px; }
+  .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 32px; }
+  .grid-3 { gap: 1px; }
   .form-row { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
   .cta-band { padding: 44px 26px; }
