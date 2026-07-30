@@ -1,15 +1,12 @@
-// Maison du Cuivre — Données par défaut du site
+// Maison du Cuivre — Données du site
 // Ce fichier est la source de vérité du contenu affiché sur toutes les pages.
-// Il est généré/écrasé par la page d'administration (admin.html) quand vous
-// cliquez sur « Télécharger site-data.js » après avoir enregistré vos
-// modifications — voir README.md.
 window.MDC_DEFAULT_DATA = {
   site: {
     name: "Maison du Cuivre",
     tagline: "Artisanat tunisien",
     logoText: "MC",
     logoImage: "",
-    footerAbout: "Atelier artisanal tunisien spécialisé dans la fabrication d'objets en cuivre faits main : décoration, art de la table et pièces sur mesure.",
+    footerAbout: "Atelier artisanal tunisien spécialisé dans la fabrication d'objets en cuivre faits main : luminaires, tables et pièces sur mesure.",
     facebook: "https://www.facebook.com/profile.php?id=61577043486522",
     phone: "+216 XX XXX XXX",
     email: "contact@maisonducuivre.tn",
@@ -28,10 +25,15 @@ window.MDC_DEFAULT_DATA = {
     contact: ""
   },
 
+  categories: [
+    { value: "luminaires", label: "Luminaires" },
+    { value: "tables", label: "Tables" }
+  ],
+
   home: {
     heroEyebrow: "Atelier artisanal · Gammarth, Tunisie",
     heroTitle: "L'art du cuivre, façonné à la main",
-    heroLead: "Maison du Cuivre perpétue un savoir-faire artisanal tunisien : plateaux ciselés, théières, lanternes et pièces de décoration, façonnés une à une dans notre atelier.",
+    heroLead: "Maison du Cuivre perpétue un savoir-faire artisanal tunisien : suspensions, lustres, appliques et tables en cuivre, façonnés une à une dans notre atelier.",
     introEyebrow: "Notre maison",
     introTitle: "Un savoir-faire transmis, une passion pour le cuivre",
     introText1: "Depuis notre atelier de Gammarth, nous façonnons le cuivre selon des techniques artisanales ancestrales : martelage, ciselure et gravure à la main. Chaque pièce raconte une histoire et porte la signature unique de son artisan.",
@@ -56,7 +58,7 @@ window.MDC_DEFAULT_DATA = {
     introEyebrow: "Qui sommes-nous",
     introTitle: "Une passion transmise de génération en génération",
     introText1: "Maison du Cuivre est un atelier artisanal implanté à Gammarth, en Tunisie. Née de la passion de nos artisans pour le travail du métal, notre maison façonne le cuivre à la main selon des techniques traditionnelles : martelage, ciselure, gravure et polissage.",
-    introText2: "Chaque objet qui sort de notre atelier — plateau, théière, lanterne ou pièce de décoration — est unique et porte en lui l'empreinte du geste artisanal. Nous croyons en un artisanat authentique, durable et proche de ses clients.",
+    introText2: "Chaque objet qui sort de notre atelier — suspension, lustre, applique ou table — est unique et porte en lui l'empreinte du geste artisanal. Nous croyons en un artisanat authentique, durable et proche de ses clients.",
     introImage: "images/products/theiere.svg",
     valuesEyebrow: "Nos valeurs",
     valuesTitle: "Ce qui nous anime au quotidien",
@@ -70,7 +72,7 @@ window.MDC_DEFAULT_DATA = {
     timelineTitle: "Les grandes étapes de Maison du Cuivre",
     timeline: [
       { year: "Les débuts", title: "Naissance de l'atelier", text: "Un petit atelier familial voit le jour à Gammarth, animé par la passion du cuivre martelé." },
-      { year: "Développement", title: "Élargissement de la gamme", text: "Plateaux, théières, lanternes et pièces de décoration viennent enrichir notre collection." },
+      { year: "Développement", title: "Élargissement de la gamme", text: "Suspensions, lustres, appliques et tables viennent enrichir notre collection." },
       { year: "Aujourd'hui", title: "Une maison tournée vers ses clients", text: "Maison du Cuivre propose désormais des créations sur mesure et est présente sur les réseaux sociaux pour partager son savoir-faire." }
     ],
     ctaTitle: "Envie de découvrir nos créations ?",
@@ -79,27 +81,70 @@ window.MDC_DEFAULT_DATA = {
 
   gallery: {
     heroTitle: "Notre galerie de créations",
-    heroText: "Plateaux, art de la table, luminaires et objets de décoration — chaque pièce est façonnée à la main dans notre atelier de Gammarth.",
+    heroText: "Suspensions, lustres, appliques murales, lampes à poser et tables en cuivre — chaque pièce est façonnée à la main dans notre atelier de Gammarth.",
     ctaTitle: "Vous ne trouvez pas ce que vous cherchez ?",
     ctaText: "Nous réalisons aussi des pièces entièrement personnalisées, selon vos envies et votre espace."
   },
 
   products: [
-    { id: "plateau", name: "Plateau ciselé", category: "plateaux", description: "Plateau rond en cuivre martelé, décor gravé main, idéal pour le service ou la décoration murale.", homeDescription: "Plateau rond en cuivre martelé, motifs gravés à la main.", image: "images/products/plateau.svg", price: "Sur devis", tag: "Best-seller", featuredHome: true },
-    { id: "theiere", name: "Théière traditionnelle", category: "table", description: "Théière artisanale au style oriental, anse et bec verseur travaillés à la main.", homeDescription: "Théière artisanale au style oriental, idéale pour le thé à la menthe.", image: "images/products/theiere.svg", price: "Sur devis", tag: "", featuredHome: true },
-    { id: "service-cafe", name: "Service à café", category: "table", description: "Cafetière et tasses assorties, parfaites pour un café à la tunisienne authentique.", homeDescription: "Cafetière et tasses assorties, parfaites pour un café à la tunisienne authentique.", image: "images/products/service-cafe.svg", price: "Sur devis", tag: "", featuredHome: false },
-    { id: "lanterne", name: "Lanterne artisanale", category: "luminaires", description: "Lanterne ajourée diffusant une lumière chaude, motifs percés à la main.", homeDescription: "Lanterne ajourée qui diffuse une lumière chaude et feutrée.", image: "images/products/lanterne.svg", price: "Sur devis", tag: "", featuredHome: true },
-    { id: "bougeoir", name: "Bougeoir artisanal", category: "luminaires", description: "Bougeoir élancé au fini martelé, pour une ambiance chaleureuse et authentique.", homeDescription: "Bougeoir élancé au fini martelé, pour une ambiance chaleureuse et authentique.", image: "images/products/bougeoir.svg", price: "Sur devis", tag: "", featuredHome: false },
-    { id: "vase", name: "Vase décoratif", category: "decoration", description: "Vase au galbe travaillé à la main, pièce maîtresse pour votre intérieur.", homeDescription: "Vase élégant au galbe travaillé à la main, pièce de caractère.", image: "images/products/vase.svg", price: "Sur devis", tag: "", featuredHome: true },
-    { id: "miroir", name: "Miroir gravé", category: "decoration", description: "Miroir encadré de cuivre ciselé, entre élégance et artisanat traditionnel.", homeDescription: "Miroir encadré de cuivre ciselé, entre élégance et artisanat traditionnel.", image: "images/products/miroir.svg", price: "Sur devis", tag: "", featuredHome: false },
-    { id: "bol", name: "Bol décoratif", category: "decoration", description: "Coupe en cuivre martelé, idéale pour la décoration ou le service.", homeDescription: "Coupe en cuivre martelé, idéale pour la décoration ou le service.", image: "images/products/bol.svg", price: "Sur devis", tag: "", featuredHome: false }
+    {
+      id: "suspension",
+      name: "Suspension",
+      category: "luminaires",
+      description: "Suspension en cuivre ajouré, motifs gravés à la main, diffusant une lumière chaude et feutrée. Parfaite pour sublimer une entrée ou une salle à manger.",
+      homeDescription: "Suspension en cuivre ajouré, motifs gravés à la main.",
+      image: "images/products/lanterne.svg",
+      price: "Sur devis",
+      tag: "",
+      featuredHome: true
+    },
+    {
+      id: "lustre",
+      name: "Lustre",
+      category: "luminaires",
+      description: "Lustre en cuivre à motifs orientaux, composé de plusieurs éléments ajourés, pour une ambiance chaleureuse et raffinée.",
+      homeDescription: "Lustre en cuivre à motifs orientaux, pièce maîtresse pour votre intérieur.",
+      image: "images/products/lanterne.svg",
+      price: "Sur devis",
+      tag: "Best-seller",
+      featuredHome: true
+    },
+    {
+      id: "applique-murale",
+      name: "Applique murale",
+      category: "luminaires",
+      description: "Applique murale en cuivre ciselé, diffusant une lumière douce et enveloppante, idéale pour un couloir ou un salon.",
+      homeDescription: "Applique murale en cuivre ciselé, lumière douce et enveloppante.",
+      image: "images/products/bougeoir.svg",
+      price: "Sur devis",
+      tag: "",
+      featuredHome: true
+    },
+    {
+      id: "lampe-a-poser",
+      name: "Lampe à poser",
+      category: "luminaires",
+      description: "Lanterne ajourée qui diffuse une lumière chaude et feutrée, à poser sur une table ou un guéridon pour une touche d'authenticité.",
+      homeDescription: "Lanterne ajourée qui diffuse une lumière chaude et feutrée.",
+      image: "images/products/bougeoir.svg",
+      price: "Sur devis",
+      tag: "",
+      featuredHome: true
+    },
+    {
+      id: "table-basse",
+      name: "Table basse",
+      category: "tables",
+      description: "Table basse au plateau en cuivre martelé, gravé à la main, posée sur un piètement en bois, alliant artisanat et élégance.",
+      homeDescription: "Plateau rond en cuivre martelé, motifs gravés à la main.",
+      image: "images/products/plateau.svg",
+      price: "Sur devis",
+      tag: "",
+      featuredHome: true
+    }
   ],
 
-  testimonials: [
-    { name: "Sonia B.", location: "Cliente à Tunis", quote: "Un plateau magnifique, le travail de gravure est d'une finesse incroyable. Livraison rapide et service très arrangeant.", rating: 5 },
-    { name: "Karim T.", location: "Client à La Marsa", quote: "Nous avons commandé une théière personnalisée pour un cadeau de mariage, le résultat a dépassé nos attentes.", rating: 5 },
-    { name: "Leïla M.", location: "Cliente à Gammarth", quote: "Un vrai savoir-faire artisanal. On sent la passion dans chaque pièce. Je recommande vivement Maison du Cuivre.", rating: 5 }
-  ],
+  testimonials: [],
 
   custom: {
     heroTitle: "Créations en cuivre sur mesure",
